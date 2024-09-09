@@ -168,6 +168,17 @@ def play(strategy0, strategy1, update,
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    while 1:
+        if not who:
+            score0 = update(strategy0(score0, score1), score0, score1, dice)
+            who = 1 - who
+            if score0 >= goal:
+                break
+        else:
+            score1 = update(strategy1(score1, score0), score1, score0, dice)
+            who = 1 - who
+            if score1 >= goal:
+                break
     # END PROBLEM 5
     return score0, score1
 
@@ -193,6 +204,9 @@ def always_roll(n):
     assert n >= 0 and n <= 10
     # BEGIN PROBLEM 6
     "*** YOUR CODE HERE ***"
+    def strategy(score=0, opponent_score=0):
+        return n
+    return strategy
     # END PROBLEM 6
 
 
@@ -224,6 +238,13 @@ def is_always_roll(strategy, goal=GOAL):
     """
     # BEGIN PROBLEM 7
     "*** YOUR CODE HERE ***"
+    is_always_flag = True
+    ori_value = strategy(0, 0)
+    for i in range(goal):
+        for j in range(goal):
+            if strategy(i, j) != ori_value:
+                is_always_flag = False
+    return is_always_flag
     # END PROBLEM 7
 
 
@@ -240,6 +261,14 @@ def make_averaged(original_function, times_called=1000):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    def make_averaged_helper(*args):
+        k = times_called
+        sum_value = 0
+        while k:
+            sum_value += original_function(*args)
+            k -= 1
+        return sum_value / times_called
+    return make_averaged_helper
     # END PROBLEM 8
 
 
@@ -253,6 +282,7 @@ def max_scoring_num_rolls(dice=six_sided, times_called=1000):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+
     # END PROBLEM 9
 
 
