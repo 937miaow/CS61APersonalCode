@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a413f055-0370-4c0f-9477-8c4d02790d47" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hw01/.ok_history" beforeDir="false" afterPath="$PROJECT_DIR$/hw01/.ok_history" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hw02/.idea/hw02.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hw02/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hw02/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hw02/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hw02/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hw02/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hw02/hw02/construct_check.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hw02/hw02/hw02.ok" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hw02/hw02/hw02.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hw02/hw02/ok" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hw02/hw02/tests/__init__.py" beforeDir="false" />
-    </list>
+    <list default="true" id="a413f055-0370-4c0f-9477-8c4d02790d47" name="更改" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -38,21 +24,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.scratch.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/Code Project/CS61A&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.idesettings.quicklists&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.scratch.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "E:/Code Project/CS61A/hw02",
+    "settings.editor.selected.configurable": "terminal"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/新建临时文件&quot;: [
-      &quot;Python&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/新建临时文件": [
+      "Python"
     ]
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
