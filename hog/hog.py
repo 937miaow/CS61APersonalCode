@@ -370,6 +370,8 @@ def final_strategy(score, opponent_score):
         roll_what = 6
     if sus_score >= max_averaged_roll_score * roll_what:
         return 0
+    if score - opponent_score >= 20:
+        return 6
     return roll_what
     # END PROBLEM 12
 
