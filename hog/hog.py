@@ -358,8 +358,19 @@ def final_strategy(score, opponent_score):
             return i
         i += 1
     sus_score = sus_update(0, score, opponent_score) - score
-    six_roll_score = make_averaged(roll_dice, 10)(6)
-    return 0 if sus_score >= six_roll_score else 6
+    four_roll_score_averaged = make_averaged(roll_dice, 10)(4)/4
+    five_roll_score_averaged = make_averaged(roll_dice, 10)(5)/5
+    six_roll_score_averaged = make_averaged(roll_dice, 10)(6)/6
+    max_averaged_roll_score = max(four_roll_score_averaged, five_roll_score_averaged, six_roll_score_averaged)
+    if max_averaged_roll_score == four_roll_score_averaged:
+        roll_what = 4
+    elif max_averaged_roll_score == five_roll_score_averaged:
+        roll_what = 5
+    else:
+        roll_what = 6
+    if sus_score >= max_averaged_roll_score * roll_what:
+        return 0
+    return roll_what
     # END PROBLEM 12
 
 
