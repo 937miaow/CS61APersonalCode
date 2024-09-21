@@ -1,4 +1,4 @@
-HW_SOURCE_FILE=__file__
+HW_SOURCE_FILE = __file__
 
 
 def num_eights(n):
@@ -25,6 +25,12 @@ def num_eights(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n == 0:
+        return 0
+    if n % 10 == 8:
+        return 1 + num_eights(n // 10)
+    else:
+        return num_eights(n // 10)
 
 
 def digit_distance(n):
@@ -47,6 +53,10 @@ def digit_distance(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n // 10 == 0:
+        return 0
+    else:
+        return abs(n % 10 - (n // 10) % 10) + digit_distance(n // 10)
 
 
 def interleaved_sum(n, odd_func, even_func):
@@ -72,6 +82,17 @@ def interleaved_sum(n, odd_func, even_func):
     """
     "*** YOUR CODE HERE ***"
 
+    def helper(n, flag, x=1):
+        if x <= n:
+            if flag:
+                return odd_func(x) + helper(n, False, x + 1)
+            else:
+                return even_func(x) + helper(n, True, x + 1)
+        else:
+            return 0
+
+    return helper(n, True)
+
 
 def next_smaller_dollar(bill):
     """Returns the next smaller bill in order."""
@@ -85,6 +106,7 @@ def next_smaller_dollar(bill):
         return 5
     elif bill == 5:
         return 1
+
 
 def count_dollars(total):
     """Return the number of ways to make change.
@@ -108,6 +130,15 @@ def count_dollars(total):
     """
     "*** YOUR CODE HERE ***"
 
+    def helper(total, bill=100):
+        if total == 0:
+            return 1
+        if total < 0 or bill is None:
+            return 0
+        return helper(total - bill, bill) + helper(total, next_smaller_dollar(bill))
+
+    return helper(total)
+
 
 def next_larger_dollar(bill):
     """Returns the next larger bill in order."""
@@ -121,6 +152,7 @@ def next_larger_dollar(bill):
         return 50
     elif bill == 50:
         return 100
+
 
 def count_dollars_upward(total):
     """Return the number of ways to make change using bills.
@@ -143,11 +175,20 @@ def count_dollars_upward(total):
     True
     """
     "*** YOUR CODE HERE ***"
+    def helper(total, bill=1):
+        if total == 0:
+            return 1
+        if total < 0 or bill is None:
+            return 0
+        return helper(total - bill, bill) + helper(total, next_larger_dollar(bill))
+
+    return helper(total)
 
 
 def print_move(origin, destination):
     """Print instructions to move a disk."""
     print("Move the top disk from rod", origin, "to rod", destination)
+
 
 def move_stack(n, start, end):
     """Print the moves required to move n disks on the start pole to the end
@@ -178,9 +219,22 @@ def move_stack(n, start, end):
     """
     assert 1 <= start <= 3 and 1 <= end <= 3 and start != end, "Bad start/end"
     "*** YOUR CODE HERE ***"
+    # Define the auxiliary pole
+    aux = 6 - start - end  # Since there are only three poles (1, 2, 3)
+
+    if n == 1:
+        print_move(start, end)  # Base case: move a single disk
+    else:
+        # Move n-1 disks from start to auxiliary
+        move_stack(n - 1, start, aux)
+        # Move the nth disk from start to end
+        print_move(start, end)
+        # Move n-1 disks from auxiliary to end
+        move_stack(n - 1, aux, end)
 
 
 from operator import sub, mul
+
 
 def make_anonymous_factorial():
     """Return the value of an expression that computes factorial.
@@ -193,5 +247,6 @@ def make_anonymous_factorial():
     ...     ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
-
+    return (lambda f: (lambda x: x(x))(lambda y: f(lambda v: y(y)(v))))(
+        lambda f: lambda n: 1 if n == 0 else mul(n, f(sub(n, 1)))
+    )
