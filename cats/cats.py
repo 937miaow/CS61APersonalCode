@@ -38,6 +38,22 @@ def pick(paragraphs, select, k):
     """
     # BEGIN PROBLEM 1
     "*** YOUR CODE HERE ***"
+    # res = []
+    # for string in paragraphs:
+    #     if select(string):
+    #         res.append(string)
+    # if k < len(res):
+    #     return res[k]
+    # return ''
+    index = 0
+    cnt = 0
+    for string in paragraphs:
+        if select(string):
+            if cnt == k:
+                return paragraphs[index]
+            cnt += 1
+        index += 1
+    return ''
     # END PROBLEM 1
 
 
@@ -58,6 +74,15 @@ def about(subject):
 
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
+    def helper(string):
+        string_pun_removed = remove_punctuation(string)
+        string_pun_removed_lower = lower(string_pun_removed)
+        string_list = split(string_pun_removed_lower)
+        for substr in string_list:
+            if substr in subject:
+                return True
+        return False
+    return helper
     # END PROBLEM 2
 
 
@@ -88,6 +113,17 @@ def accuracy(typed, source):
     source_words = split(source)
     # BEGIN PROBLEM 3
     "*** YOUR CODE HERE ***"
+    typed_correct_cnt = 0
+    if len(source_words) == 0 and len(typed_words) == 0:
+        return 100.0
+    elif len(source_words) == 0 or len(typed_words) == 0:
+        return 0.0
+    for i in range(len(source_words)):
+        if i >= len(typed_words):
+            break
+        if source_words[i] == typed_words[i]:
+            typed_correct_cnt += 1
+    return typed_correct_cnt / len(typed_words) * 100
     # END PROBLEM 3
 
 
@@ -106,6 +142,10 @@ def wpm(typed, elapsed):
     assert elapsed > 0, "Elapsed time must be positive"
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    time_ratio = elapsed / 60
+    typed_to_typical = len(typed) / 5
+    WPM = typed_to_typical / time_ratio
+    return WPM
     # END PROBLEM 4
 
 
