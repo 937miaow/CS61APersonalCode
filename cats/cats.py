@@ -74,6 +74,7 @@ def about(subject):
 
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
+
     def helper(string):
         string_pun_removed = remove_punctuation(string)
         string_pun_removed_lower = lower(string_pun_removed)
@@ -82,6 +83,7 @@ def about(subject):
             if substr in subject:
                 return True
         return False
+
     return helper
     # END PROBLEM 2
 
@@ -207,6 +209,19 @@ def autocorrect(typed_word, word_list, diff_function, limit):
     """
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    if typed_word in word_list:
+        return typed_word
+    index = 0
+    diff = 0xffff
+    for word in word_list:
+        diff_pre = diff
+        func_value = diff_function(typed_word, word, limit)
+        diff = min(diff, func_value)
+        if diff_pre != diff:
+            index = word_list.index(word)
+    if diff > limit:
+        return typed_word
+    return word_list[index]
     # END PROBLEM 5
 
 
@@ -233,7 +248,16 @@ def furry_fixes(typed, source, limit):
     5
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    if typed == source:
+        return 0
+    if limit < 0:
+        return 1
+    if len(typed) == 0 or len(source) == 0:
+        return abs(len(typed) - len(source))
+    if typed[0] == source[0]:
+        return furry_fixes(typed[1:], source[1:], limit)
+    else:
+        return furry_fixes(typed[1:], source[1:], limit - 1) + 1
     # END PROBLEM 6
 
 
@@ -254,22 +278,25 @@ def minimum_mewtations(typed, source, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
-    assert False, 'Remove this line'
-    if ___________: # Base cases should go here, you may add more base cases as needed.
+    if typed == source:  # Base cases should go here, you may add more base cases as needed.
         # BEGIN
-        "*** YOUR CODE HERE ***"
+        return 0
         # END
+    if limit < 0:
+        return 1
+    if len(typed) == 0 or len(source) == 0:
+        return abs(len(typed) - len(source))
     # Recursive cases should go below here
-    if ___________: # Feel free to remove or add additional cases
+    if typed[0] == source[0]:  # Feel free to remove or add additional cases
         # BEGIN
-        "*** YOUR CODE HERE ***"
+        return minimum_mewtations(typed[1::], source[1::], limit)
         # END
     else:
-        add = ... # Fill in these lines
-        remove = ...
-        substitute = ...
+        add = minimum_mewtations(source[0] + typed, source, limit - 1) + 1  # Fill in these lines
+        remove = minimum_mewtations(typed[1::], source, limit - 1) + 1
+        substitute = minimum_mewtations(source[0] + typed[1::], source, limit - 1) + 1
         # BEGIN
-        "*** YOUR CODE HERE ***"
+        return min(add, remove, substitute)
         # END
 
 
@@ -364,7 +391,7 @@ def fastest_words(words_and_times):
     check_words_and_times(words_and_times)  # verify that the input is properly formed
     words, times = words_and_times['words'], words_and_times['times']
     player_indices = range(len(times))  # contains an *index* for each player
-    word_indices = range(len(words))    # contains an *index* for each word
+    word_indices = range(len(words))  # contains an *index* for each word
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
     # END PROBLEM 10
@@ -387,12 +414,13 @@ def get_time(times, player_num, word_index):
     given a list of lists of times returned by time_per_word."""
     num_players = len(times)
     num_words = len(times[0])
-    assert word_index < len(times[0]), f"word_index {word_index} outside of 0 to {num_words-1}"
-    assert player_num < len(times), f"player_num {player_num} outside of 0 to {num_players-1}"
+    assert word_index < len(times[0]), f"word_index {word_index} outside of 0 to {num_words - 1}"
+    assert player_num < len(times), f"player_num {player_num} outside of 0 to {num_players - 1}"
     return times[player_num][word_index]
 
 
 enable_multiplayer = False  # Change to True when you're ready to race.
+
 
 ##########################
 # Command Line Interface #
