@@ -173,11 +173,21 @@ def memo(f):
 
 def memo_diff(diff_function):
     """A memoization function."""
+    # {(typed, source):(value, limit)}
     cache = {}
 
     def memoized(typed, source, limit):
         # BEGIN PROBLEM EC
-        "*** YOUR CODE HERE ***"
+        ty_tuple = (typed, source)
+        if ty_tuple not in cache.keys():
+            diff_value = diff_function(typed, source, limit)
+            cache[ty_tuple] = (diff_value, limit)
+        else:
+            cache_limit = cache[ty_tuple][1]
+            if limit > cache_limit:
+                diff_value = diff_function(typed, source, limit)
+                cache[ty_tuple] = (diff_value, limit)
+        return cache[ty_tuple][0]
         # END PROBLEM EC
 
     return memoized
@@ -188,6 +198,7 @@ def memo_diff(diff_function):
 ###########
 
 
+@memo
 def autocorrect(typed_word, word_list, diff_function, limit):
     """Returns the element of WORD_LIST that has the smallest difference
     from TYPED_WORD based on DIFF_FUNCTION. If multiple words are tied for the smallest difference,
@@ -261,6 +272,7 @@ def furry_fixes(typed, source, limit):
     # END PROBLEM 6
 
 
+@memo_diff
 def minimum_mewtations(typed, source, limit):
     """A diff function for autocorrect that computes the edit distance from TYPED to SOURCE.
     This function takes in a string TYPED, a string SOURCE, and a number LIMIT.
@@ -278,26 +290,60 @@ def minimum_mewtations(typed, source, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
-    if typed == source:  # Base cases should go here, you may add more base cases as needed.
-        # BEGIN
+    # if typed == source:  # Base cases should go here, you may add more base cases as needed.
+    #     # BEGIN
+    #     return 0
+    #     # END
+    # if limit < 0:
+    #     return 1
+    # if len(typed) == 0 or len(source) == 0:
+    #     return abs(len(typed) - len(source))
+    # # Recursive cases should go below here
+    # if typed[0] == source[0]:  # Feel free to remove or add additional cases
+    #     # BEGIN
+    #     return minimum_mewtations(typed[1::], source[1::], limit)
+    #     # END
+    # else:
+    #     add = minimum_mewtations(source[0] + typed, source, limit - 1) + 1
+    #     remove = minimum_mewtations(typed[1::], source, limit - 1) + 1
+    #     substitute = minimum_mewtations(source[0] + typed[1::], source, limit - 1) + 1
+    #     return min(add, remove, substitute)
+    if typed == source:
         return 0
-        # END
     if limit < 0:
         return 1
-    if len(typed) == 0 or len(source) == 0:
-        return abs(len(typed) - len(source))
-    # Recursive cases should go below here
-    if typed[0] == source[0]:  # Feel free to remove or add additional cases
-        # BEGIN
-        return minimum_mewtations(typed[1::], source[1::], limit)
-        # END
-    else:
-        add = minimum_mewtations(source[0] + typed, source, limit - 1) + 1  # Fill in these lines
-        remove = minimum_mewtations(typed[1::], source, limit - 1) + 1
-        substitute = minimum_mewtations(source[0] + typed[1::], source, limit - 1) + 1
-        # BEGIN
-        return min(add, remove, substitute)
-        # END
+    if len(typed) == 0:
+        return len(source)
+    if len(source) == 0:
+        return len(typed)
+
+        # 创建一个 DP 表
+    dp = []
+    for i in range(len(typed) + 1):
+        dp.append([float('inf')] * (len(source) + 1))
+
+    dp[0][0] = 0
+
+    # 初始化第一列和第一行
+    for i in range(1, len(typed) + 1):
+        dp[i][0] = i  # typed 的前 i 个字符与空字符串的编辑距离为 i
+    for j in range(1, len(source) + 1):
+        dp[0][j] = j  # 空字符串与 source 的前 j 个字符的编辑距离为 j
+
+    # 填充 DP 表
+    for i in range(1, len(typed) + 1):
+        for j in range(1, len(source) + 1):
+            if typed[i - 1] == source[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1]  # 没有修改
+            else:
+                dp[i][j] = min(
+                    dp[i - 1][j] + 1,  # 删除
+                    dp[i][j - 1] + 1,  # 添加
+                    dp[i - 1][j - 1] + 1  # 替换
+                )
+
+    # 返回最终结果
+    return dp[len(typed)][len(source)] if dp[len(typed)][len(source)] <= limit else limit+1
 
 
 # Ignore the line below
@@ -308,45 +354,7 @@ def final_diff(typed, source, limit):
     """A diff function that takes in a string TYPED, a string SOURCE, and a number LIMIT.
     If you implement this function, it will be used."""
     # Common misspellings
-    common_misspellings = {
-        'teh': 'the',
-        'adn': 'and',
-        'recieve': 'receive',
-        'occured': 'occurred',
-    }
-
-    # Replace common misspellings in typed
-    for misspelled, correct in common_misspellings.items():
-        typed = typed.replace(misspelled, correct)
-
-    typed_len = len(typed)
-    source_len = len(source)
-
-    # Initialize the difference matrix
-    dp = [[0] * (source_len + 1) for _ in range(typed_len + 1)]
-
-    for i in range(typed_len + 1):
-        dp[i][0] = i  # Deletions
-    for j in range(source_len + 1):
-        dp[0][j] = j  # Insertions
-
-    # Fill the DP table
-    for i in range(1, typed_len + 1):
-        for j in range(1, source_len + 1):
-            if typed[i - 1] == source[j - 1]:
-                dp[i][j] = dp[i - 1][j - 1]  # No cost
-            else:
-                dp[i][j] = min(
-                    dp[i - 1][j] + 1,  # Deletion
-                    dp[i][j - 1] + 1,  # Insertion
-                    dp[i - 1][j - 1] + 1  # Substitution
-                )
-            # Check for adjacent swaps
-            if i > 1 and j > 1 and typed[i - 1] == source[j - 2] and typed[i - 2] == source[j - 1]:
-                dp[i][j] = min(dp[i][j], dp[i - 2][j - 2] + 1)
-
-    # Final difference score
-    return dp[typed_len][source_len]
+    return minimum_mewtations(typed, source, limit)
 
 
 FINAL_DIFF_LIMIT = 6  # REPLACE THIS WITH YOUR LIMIT
@@ -420,7 +428,7 @@ def time_per_word(words, timestamps_per_player):
         sub_list = []
         item_len = len(item)
         for i in range(1, item_len):
-            sub_value = item[i]-item[i-1]
+            sub_value = item[i] - item[i - 1]
             sub_list.append(sub_value)
         times.append(sub_list)
     # END PROBLEM 9
