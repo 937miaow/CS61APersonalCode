@@ -307,7 +307,46 @@ minimum_mewtations = count(minimum_mewtations)
 def final_diff(typed, source, limit):
     """A diff function that takes in a string TYPED, a string SOURCE, and a number LIMIT.
     If you implement this function, it will be used."""
-    assert False, "Remove this line to use your final_diff function."
+    # Common misspellings
+    common_misspellings = {
+        'teh': 'the',
+        'adn': 'and',
+        'recieve': 'receive',
+        'occured': 'occurred',
+    }
+
+    # Replace common misspellings in typed
+    for misspelled, correct in common_misspellings.items():
+        typed = typed.replace(misspelled, correct)
+
+    typed_len = len(typed)
+    source_len = len(source)
+
+    # Initialize the difference matrix
+    dp = [[0] * (source_len + 1) for _ in range(typed_len + 1)]
+
+    for i in range(typed_len + 1):
+        dp[i][0] = i  # Deletions
+    for j in range(source_len + 1):
+        dp[0][j] = j  # Insertions
+
+    # Fill the DP table
+    for i in range(1, typed_len + 1):
+        for j in range(1, source_len + 1):
+            if typed[i - 1] == source[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1]  # No cost
+            else:
+                dp[i][j] = min(
+                    dp[i - 1][j] + 1,  # Deletion
+                    dp[i][j - 1] + 1,  # Insertion
+                    dp[i - 1][j - 1] + 1  # Substitution
+                )
+            # Check for adjacent swaps
+            if i > 1 and j > 1 and typed[i - 1] == source[j - 2] and typed[i - 2] == source[j - 1]:
+                dp[i][j] = min(dp[i][j], dp[i - 2][j - 2] + 1)
+
+    # Final difference score
+    return dp[typed_len][source_len]
 
 
 FINAL_DIFF_LIMIT = 6  # REPLACE THIS WITH YOUR LIMIT
@@ -342,7 +381,17 @@ def report_progress(typed, source, user_id, upload):
     0.2
     """
     # BEGIN PROBLEM 8
-    "*** YOUR CODE HERE ***"
+    source_len = len(source)
+    typed_len = len(typed)
+    correct_num = 0
+    for i in range(typed_len):
+        if typed[i] != source[i]:
+            break
+        correct_num += 1
+    progress = correct_num / source_len
+    dic = {"id": user_id, "progress": progress}
+    upload(dic)
+    return progress
     # END PROBLEM 8
 
 
@@ -367,6 +416,13 @@ def time_per_word(words, timestamps_per_player):
     tpp = timestamps_per_player  # A shorter name (for convenience)
     # BEGIN PROBLEM 9
     times = []  # You may remove this line
+    for item in tpp:
+        sub_list = []
+        item_len = len(item)
+        for i in range(1, item_len):
+            sub_value = item[i]-item[i-1]
+            sub_list.append(sub_value)
+        times.append(sub_list)
     # END PROBLEM 9
     return {'words': words, 'times': times}
 
@@ -393,7 +449,15 @@ def fastest_words(words_and_times):
     player_indices = range(len(times))  # contains an *index* for each player
     word_indices = range(len(words))  # contains an *index* for each word
     # BEGIN PROBLEM 10
-    "*** YOUR CODE HERE ***"
+    words_list = [[] for _ in range(len(times))]
+    for j in word_indices:
+        times_list = []
+        for i in player_indices:
+            times_list.append(times[i][j])
+        min_value = min(times_list)
+        min_index = times_list.index(min_value)
+        words_list[min_index].append(words[j])
+    return words_list
     # END PROBLEM 10
 
 
