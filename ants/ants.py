@@ -53,6 +53,7 @@ class Insect:
 
     next_id = 0  # Every insect gets a unique id number
     damage = 0
+    is_waterproof = False
 
     # ADD CLASS ATTRIBUTES HERE
 
@@ -102,6 +103,7 @@ class Ant(Insect):
     implemented = False  # Only implemented Ant classes should be instantiated
     food_cost = 0
     is_container = False
+    is_double = False
 
     # ADD CLASS ATTRIBUTES HERE
 
@@ -144,6 +146,8 @@ class Ant(Insect):
         """Double this ants's damage, if it has not already been doubled."""
         # BEGIN Problem 12
         "*** YOUR CODE HERE ***"
+        if not self.is_double:
+            self.damage *= 2
         # END Problem 12
 
 
@@ -415,11 +419,22 @@ class Water(Place):
         its health to 0."""
         # BEGIN Problem 10
         "*** YOUR CODE HERE ***"
+        Place.add_insect(self, insect)
+        if not insect.is_waterproof:
+            insect.reduce_health(insect.health)
         # END Problem 10
 
 
 # BEGIN Problem 11
 # The ScubaThrower class
+class ScubaThrower(ThrowerAnt):
+    name = 'Scuba'
+    food_cost = 6
+    is_waterproof = True
+    implemented = True
+
+    def __init__(self, health=1):
+        super().__init__(health)
 # END Problem 11
 
 
@@ -428,9 +443,10 @@ class QueenAnt(ThrowerAnt):
 
     name = 'Queen'
     food_cost = 7
+    is_double = True
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 12
-    implemented = False  # Change to True to view in the GUI
+    implemented = True  # Change to True to view in the GUI
 
     # END Problem 12
 
@@ -440,6 +456,18 @@ class QueenAnt(ThrowerAnt):
         """
         # BEGIN Problem 12
         "*** YOUR CODE HERE ***"
+        ThrowerAnt.action(self, gamestate)
+        place_cur = self.place.exit
+        while place_cur is not None:
+            if place_cur.ant is not None:
+                if not place_cur.ant.is_double:
+                    place_cur.ant.double()
+                    place_cur.ant.is_double = True
+                if place_cur.ant.is_container and place_cur.ant.ant_contained is not None:
+                    if not place_cur.ant.ant_contained.is_double:
+                        place_cur.ant.ant_contained.double()
+                        place_cur.ant.ant_contained.is_double = True
+            place_cur = place_cur.exit
         # END Problem 12
 
     def reduce_health(self, amount):
@@ -448,6 +476,9 @@ class QueenAnt(ThrowerAnt):
         """
         # BEGIN Problem 12
         "*** YOUR CODE HERE ***"
+        if self.health - amount <= 0:
+            ants_lose()
+        Ant.reduce_health(self, amount)
         # END Problem 12
 
 
