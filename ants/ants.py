@@ -493,12 +493,38 @@ class SlowThrower(ThrowerAnt):
     food_cost = 6
     # BEGIN Problem EC 1
     implemented = True  # Change to True to view in the GUI
-
+    is_action_init = False
+    original_action = None
     # END Problem EC 1
 
     def throw_at(self, target):
         # BEGIN Problem EC 1
         "*** YOUR CODE HERE ***"
+        if target is not None:
+            if not hasattr(target, 'slow_turns_remaining'):
+                target.slow_turns_remaining = 0
+
+            if target.slow_turns_remaining == 0:
+                target.slow_turns_remaining = 5
+            else:
+                target.slow_turns_remaining = 5
+
+            original_action = target.action
+            if not self.is_action_init:
+                self.original_action = target.action
+                self.is_action_init = True
+            else:
+                original_action = self.original_action
+
+            def new_action(gamestate):
+                if target.slow_turns_remaining > 0:
+                    target.slow_turns_remaining -= 1
+                    if gamestate.time % 2 == 0:
+                        original_action(gamestate)
+                else:
+                    original_action(gamestate)
+
+            target.action = new_action
         # END Problem EC 1
 
 
@@ -508,7 +534,7 @@ class ScaryThrower(ThrowerAnt):
     name = 'Scary'
     food_cost = 6
     # BEGIN Problem EC 2
-    implemented = False  # Change to True to view in the GUI
+    implemented = True  # Change to True to view in the GUI
 
     # END Problem EC 2
 
@@ -544,7 +570,6 @@ class LaserAnt(ThrowerAnt):
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem EC 4
     implemented = False  # Change to True to view in the GUI
-
     # END Problem EC 4
 
     def __init__(self, health=1):
@@ -580,6 +605,7 @@ class Bee(Insect):
     name = 'Bee'
     damage = 1
     is_waterproof = True
+    has_scare = False
 
     def sting(self, ant):
         """Attack an ANT, reducing its health by 1."""
@@ -625,6 +651,10 @@ class Bee(Insect):
         """
         # BEGIN Problem EC 2
         "*** YOUR CODE HERE ***"
+        if not self.has_scare:
+            if not self.place.entrance.is_hive:
+                self.move_to(self.place.entrance)
+            self.has_scare = True
         # END Problem EC 2
 
 
