@@ -39,6 +39,13 @@ class Account:
         """Return the number of years until balance would grow to amount."""
         assert self.balance > 0 and amount > 0 and self.interest > 0
         "*** YOUR CODE HERE ***"
+        balance = self.balance
+        cnt = 0
+        power = 1 + self.interest
+        while amount > balance:
+            balance *= power
+            cnt += 1
+        return cnt
 
 
 class FreeChecking(Account):
@@ -68,6 +75,12 @@ class FreeChecking(Account):
     free_withdrawals = 2
 
     "*** YOUR CODE HERE ***"
+    def withdraw(self, amount):
+        if self.free_withdrawals > 0:
+            self.free_withdrawals -= 1
+            return Account.withdraw(self, amount)
+        else:
+            return Account.withdraw(self, amount + self.withdraw_fee)
 
 
 def without(s, i):
@@ -84,7 +97,27 @@ def without(s, i):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    # copy = Link(s.first)
+    # cur = copy
+    # original_cur = s.rest
+    # index = 1
+    # if i == 0:
+    #     return s.rest
+    # while original_cur is not Link.empty:
+    #     if index == i:
+    #         original_cur = original_cur.rest
+    #     else:
+    #         cur.rest = Link(original_cur.first)
+    #         cur = cur.rest
+    #         original_cur = original_cur.rest
+    #     index += 1
+    # return copy
+    if s is Link.empty:
+        return Link.empty
+    if i == 0:
+        return s.rest  # Skip the first element
+        # Create a copy of s with the element at index i removed
+    return Link(s.first, without(s.rest, i - 1))
 
 def duplicate_link(s, val):
     """Mutates s so that each element equal to val is followed by another val.
@@ -103,6 +136,14 @@ def duplicate_link(s, val):
     Link(1, Link(2, Link(2, Link(2, Link(2, Link(3))))))
     """
     "*** YOUR CODE HERE ***"
+    if s is Link.empty:
+        return
+    if s.first == val:
+        s.rest = Link(val, s.rest)
+        duplicate_link(s.rest.rest, val)
+    else:
+        duplicate_link(s.rest, val)
+
 
 
 class Link:
