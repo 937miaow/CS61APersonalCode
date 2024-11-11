@@ -44,11 +44,11 @@ def prune_small(t, n):
     >>> t3
     Tree(6, [Tree(1), Tree(3, [Tree(1), Tree(2)])])
     """
-    while ___________________________:
-        largest = max(_______________, key=____________________)
-        _________________________
-    for __ in _____________:
-        ___________________
+    while len(t.branches) > n:
+        largest = max(t.branches, key=lambda tree: tree.label)
+        t.branches.remove(largest)
+    for b in t.branches:
+        prune_small(b, n)
 
 
 def delete(t, x):
@@ -71,13 +71,30 @@ def delete(t, x):
     Tree(1, [Tree(4), Tree(5), Tree(3, [Tree(6)]), Tree(6), Tree(7), Tree(8), Tree(4)])
     """
     new_branches = []
-    for _________ in ________________:
-        _______________________
+    for b in t.branches:
+        delete(b, x)
         if b.label == x:
-            __________________________________
+            for branch in b.branches:
+                new_branches.append(branch)
         else:
-            __________________________________
-    t.branches = ___________________
+            new_branches.append(b)
+    t.branches = new_branches
+
+
+def max_path_sum(t):
+    """Return the maximum path sum of the tree.
+
+    >>> t = Tree(1, [Tree(5, [Tree(1), Tree(3)]), Tree(10)])
+    >>> max_path_sum(t)
+    11
+    """
+    "*** YOUR CODE HERE ***"
+    if t.is_leaf():
+        return t.label
+    max_sum = 0
+    for branch in t.branches:
+        max_sum = max(max_path_sum(branch), max_sum)
+    return t.label + max_sum
 
 
 class Tree:
